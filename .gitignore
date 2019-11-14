@@ -6,6 +6,11 @@ __pycache__/
 # C extensions
 *.so
 
+assets/.DS_Store
+module/.DS_Store
+.DS_Store
+module/Pipfile.lock
+
 # Distribution / packaging
 .Python
 build/
