@@ -10,6 +10,7 @@ assets/.DS_Store
 module/.DS_Store
 .DS_Store
 module/Pipfile.lock
+executable/
 
 # Distribution / packaging
 .Python
