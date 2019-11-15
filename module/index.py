@@ -10,7 +10,14 @@ def is_csv(file):
     if not file.endswith('.csv'):
         print("Insert a correct CSV file please.")
         return False
-    return True
+    try:
+        with open(file, newline='') as csvfile:
+            csv.Sniffer().sniff(csvfile.read(1024))
+            csvfile.seek(0)
+            return True
+    except:
+        print("Insert a correct CSV file please.")
+        return False
 
 def fusion_data(tarif, gdp):
     '''
