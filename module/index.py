@@ -86,8 +86,8 @@ def cli():
     '''
 
 @cli.command('build')
-@click.argument('file_1')
-@click.argument('file_2')
+@click.argument('file_1', type=click.Path(exists=True))
+@click.argument('file_2', type=click.Path(exists=True))
 def build_scatter_plot(file_1, file_2):
     '''
     Build a Scatter plot combining data
