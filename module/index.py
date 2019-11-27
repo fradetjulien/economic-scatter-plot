@@ -1,23 +1,21 @@
+'''
+Scatter plot builder
+'''
+import os
 import csv
 import random
 import click
 import matplotlib.pyplot as plt
 
-def is_csv(file):
+def display_scatter(plt):
     '''
-    Check if the file received in parameter is a correct CSV file
+    Display the scatter with legend, label and title
     '''
-    if not file.endswith('.csv'):
-        print("Insert a correct CSV file please.")
-        return False
-    try:
-        with open(file, newline='') as csvfile:
-            csv.Sniffer().sniff(csvfile.read(1024))
-            csvfile.seek(0)
-            return True
-    except:
-        print("Insert a correct CSV file please.")
-        return False
+    plt.title("Scatter Plot of GDP and Currency Value")
+    plt.grid(True)
+    plt.xlabel('GDP')
+    plt.ylabel('Currency value')
+    plt.show()
 
 def fusion_data(tarif, gdp):
     '''
@@ -45,27 +43,17 @@ def get_data(file):
     '''
     waiting = True
     data = []
-    try:
-        with open(file, newline='') as csvfile:
-            reader = csv.reader(csvfile, delimiter=',', quoting=csv.QUOTE_NONE)
+    with open(file, newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',', quoting=csv.QUOTE_NONE)
+        try:
             for row in reader:
                 if not waiting:
                     data.append(row)
                 else:
                     waiting = check_to_start(row)
-    except:
-        print("Failed while opening and reading file.")
+        except IndexError:
+            print("Failed while opening and reading file.")
     return data
-
-def display_scatter(plt):
-    '''
-    Display the scatter with legend, label and title
-    '''
-    plt.title("Scatter Plot of GDP and Currency Value")
-    plt.legend()
-    plt.xlabel('GDP')
-    plt.ylabel('Currency value')
-    plt.show()
 
 def builder(file_1, file_2):
     '''
@@ -78,6 +66,15 @@ def builder(file_1, file_2):
         plt.scatter(data[random_value][2], data[random_value][3], label=data[random_value][0])
         i = i + 1
     display_scatter(plt)
+
+def is_csv(file):
+    '''
+    Check if the file received in parameter is a correct CSV file
+    '''
+    if not file.endswith('.csv') or os.path.getsize(file) <= 0:
+        print("Insert a correct CSV file please.")
+        return False
+    return True
 
 @click.group()
 def cli():
