@@ -43,7 +43,7 @@ def get_data(file):
     '''
     waiting = True
     data = []
-    with open(file, newline='') as csvfile:
+    with open(file, mode='r', newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=',', quoting=csv.QUOTE_NONE)
         try:
             for row in reader:
@@ -51,8 +51,10 @@ def get_data(file):
                     data.append(row)
                 else:
                     waiting = check_to_start(row)
-        except IndexError:
+        except csv.Error:
             print("Failed while opening and reading file.")
+        finally:
+            del reader
     return data
 
 def builder(file_1, file_2):
