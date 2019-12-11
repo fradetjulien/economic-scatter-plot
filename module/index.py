@@ -15,7 +15,35 @@ def display_scatter(plt):
     plt.grid(True)
     plt.xlabel('GDP')
     plt.ylabel('Currency value')
+    plt.legend()
     plt.show()
+
+def init_selected_data():
+    '''
+    Set a new dictionnary for data selected
+    '''
+    selected_data = {
+        "currency_value": 0,
+        "gdp_value": 0,
+        "label": None
+    }
+    return selected_data
+
+def get_from_orginal_data(random_value, original_data):
+    '''
+    Convert original values into Int or String
+    '''
+    selected_data = init_selected_data()
+    selected_data["label"] = original_data[random_value][0]
+    if (original_data[random_value][2] and original_data[random_value][2].find('.') != -1):
+        selected_data["gdp_value"] = float(original_data[random_value][2])
+    elif (original_data[random_value][2].isdecimal()):
+        selected_data["gdp_value"] = int(original_data[random_value][2])
+    if (original_data[random_value][3] and original_data[random_value][3].find('.') != -1):
+        selected_data["currency_value"] = float(original_data[random_value][3])
+    elif (original_data[random_value][3].isdecimal()):
+        selected_data["currency_value"] = int(original_data[random_value][3])
+    return selected_data
 
 def fusion_data(tarif, gdp):
     '''
@@ -28,6 +56,17 @@ def fusion_data(tarif, gdp):
     except:
         print("Can't synchronize data from both files.")
     return gdp
+
+def clean_row(row):
+    '''
+    Clean each row of any whitespace
+    '''
+    new_row = []
+    for item in row:
+        item = item.strip()
+        new_row.append(item)
+    del row
+    return new_row
 
 def check_to_start(line):
     '''
@@ -48,6 +87,7 @@ def get_data(file):
         try:
             for row in reader:
                 if not waiting:
+                    row = clean_row(row)
                     data.append(row)
                 else:
                     waiting = check_to_start(row)
@@ -63,9 +103,12 @@ def builder(file_1, file_2):
     '''
     data = fusion_data(get_data(file_1), get_data(file_2))
     i = 0
+    selected_data = []
     while i < 10:
         random_value = random.randint(1, len(data) - 1)
-        plt.scatter(data[random_value][2], data[random_value][3], label=data[random_value][0])
+        selected_data.append(get_from_orginal_data(random_value, data))
+        print("LABEL : {} | GDP : {} | PRICE : {}\n".format(selected_data[i]["label"], selected_data[i]["gdp_value"], selected_data[i]["currency_value"]))
+        plt.scatter(selected_data[i]["gdp_value"], selected_data[i]["currency_value"], label=selected_data[i]["label"])
         i = i + 1
     display_scatter(plt)
 
